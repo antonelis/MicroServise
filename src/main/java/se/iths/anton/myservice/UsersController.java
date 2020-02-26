@@ -3,11 +3,12 @@ package se.iths.anton.myservice;
 
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -33,7 +34,16 @@ public class UsersController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
+    @PostMapping
+    public ResponseEntity<User> createPerson(@RequestBody User user) {
+      //  log.info("POST create Person " + person);
+        var p = repository.save(user);
+   //     log.info("Saved to repository " + p);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(linkTo(UsersController.class).slash(p.getId()).toUri());
+        //headers.add("Location", "/api/persons/" + p.getId());
+        return new ResponseEntity<>(p, headers, HttpStatus.CREATED);
+    }
 
 
 }
