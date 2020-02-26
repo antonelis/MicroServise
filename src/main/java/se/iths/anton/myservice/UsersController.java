@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UsersController {
 
     final UsersRepository repository;
+    private final UsersModelAssembler assembler;
 
-    public UsersController(UsersRepository usersRepository) {
+    public UsersController(UsersRepository usersRepository, UsersModelAssembler usersModelAssembler) {
         this.repository = usersRepository;
+        this.assembler = usersModelAssembler;
     }
     @GetMapping
     public CollectionModel<EntityModel<User>> all() {
@@ -25,7 +27,7 @@ public class UsersController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<EntityModel<Person>> one(@PathVariable long id) {
+    public ResponseEntity<EntityModel<User>> one(@PathVariable int id) {
         return repository.findById(id)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
