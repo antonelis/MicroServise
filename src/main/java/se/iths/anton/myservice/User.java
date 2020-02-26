@@ -2,17 +2,19 @@ package se.iths.anton.myservice;
 
 
 import lombok.Data;
-import lombok.Generated;
+
 import lombok.NoArgsConstructor;
 
+
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Data
 @NoArgsConstructor
 @Entity
 public class User {
-    @Id @Generated Integer id;
+    @Id @GeneratedValue Integer id;
     String userName;
     String realName;
     String city;
