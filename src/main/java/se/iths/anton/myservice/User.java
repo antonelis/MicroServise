@@ -12,10 +12,19 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @Entity
 public class User {
-    @Id @Generated int id;
+    @Id @Generated Integer id;
     String userName;
     String realName;
     String city;
     int income;
     boolean inRelation;
+
+    public User(Integer id, String userName,String realName, String city, int income, boolean inRelation) {
+        this.id=id;
+        this.userName=userName;
+        this.realName=realName;
+        this.city=city;
+        this.income=income;
+        this.inRelation=inRelation;
+    }
 }

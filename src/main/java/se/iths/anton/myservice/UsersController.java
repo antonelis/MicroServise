@@ -28,7 +28,7 @@ public class UsersController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<EntityModel<User>> one(@PathVariable int id) {
+    public ResponseEntity<EntityModel<User>> one(@PathVariable Integer id) {
         return repository.findById(id)
                 .map(assembler::toModel)
                 .map(ResponseEntity::ok)
