@@ -66,11 +66,13 @@ public class UsersController {
                 .orElseGet(() ->
                         new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    @PutMapping("/{id}")
-    ResponseEntity<User> replacePerson(@RequestBody User newPerson, @PathVariable int id) {
+    @PatchMapping("/{id}")
+    ResponseEntity<User> modifyPerson(@RequestBody User newPerson, @PathVariable Integer id) {
         return repository.findById(id)
                 .map(person -> {
-                    person.setUserName(newPerson.getUserName());
+                    if (newPerson.getUserName() != null)
+                        person.setUserName(newPerson.getUserName());
+
                     repository.save(person);
                     HttpHeaders headers = new HttpHeaders();
                     headers.setLocation(linkTo(UsersController.class).slash(person.getId()).toUri());
