@@ -23,7 +23,7 @@ public class UsersController {
     }
     @GetMapping
     public CollectionModel<EntityModel<User>> all() {
-        log.debug("All persons called");
+        log.info("All persons called");
         return assembler.toCollectionModel(repository.findAll());
     }
 
@@ -44,5 +44,39 @@ public class UsersController {
         //headers.add("Location", "/api/persons/" + p.getId());
         return new ResponseEntity<>(u, headers, HttpStatus.CREATED);
     }
-
+    @DeleteMapping("/{id}")
+    ResponseEntity<?> deletePerson(@PathVariable Integer id) {
+        if (repository.existsById(id)) {
+            log.info("User deleted");
+            repository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    @PutMapping("/{id}")
+    ResponseEntity<User> replacePerson(@RequestBody User newPerson, @PathVariable Integer id) {
+        return repository.findById(id)
+                .map(user -> {
+                    user.setUserName(newPerson.getUserName());
+                    repository.save(user);
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.setLocation(linkTo(UsersController.class).slash(user.getId()).toUri());
+                    return new ResponseEntity<>(user, headers, HttpStatus.OK);
+                })
+                .orElseGet(() ->
+                        new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+    @PutMapping("/{id}")
+    ResponseEntity<User> replacePerson(@RequestBody User newPerson, @PathVariable int id) {
+        return repository.findById(id)
+                .map(person -> {
+                    person.setUserName(newPerson.getUserName());
+                    repository.save(person);
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.setLocation(linkTo(UsersController.class).slash(person.getId()).toUri());
+                    return new ResponseEntity<>(person, headers, HttpStatus.OK);
+                })
+                .orElseGet(() ->
+                        new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 }
