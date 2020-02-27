@@ -1,8 +1,6 @@
 package se.iths.anton.myservice;
 
-
 import lombok.Data;
-
 import lombok.NoArgsConstructor;
 
 

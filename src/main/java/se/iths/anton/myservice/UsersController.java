@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/users")
 public class UsersController {
@@ -23,7 +23,7 @@ public class UsersController {
     }
     @GetMapping
     public CollectionModel<EntityModel<User>> all() {
-       // log.debug("All persons called");
+        log.debug("All persons called");
         return assembler.toCollectionModel(repository.findAll());
     }
 
@@ -36,14 +36,13 @@ public class UsersController {
     }
     @PostMapping
     public ResponseEntity<User> createPerson(@RequestBody User user) {
-      //  log.info("POST create Person " + person);
-        var p = repository.save(user);
-   //     log.info("Saved to repository " + p);
+        log.info("POST create Person " + user);
+        var u = repository.save(user);
+        log.info("Saved to repository " + u);
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(linkTo(UsersController.class).slash(p.getId()).toUri());
+        headers.setLocation(linkTo(UsersController.class).slash(u.getId()).toUri());
         //headers.add("Location", "/api/persons/" + p.getId());
-        return new ResponseEntity<>(p, headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(u, headers, HttpStatus.CREATED);
     }
-
 
 }
