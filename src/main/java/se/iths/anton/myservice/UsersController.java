@@ -61,6 +61,7 @@ public class UsersController {
                     user.setRealName(newUser.getRealName());
                     user.setCity(newUser.getCity());
                     user.setIncome(newUser.getIncome());
+                    user.setInRelation(newUser.inRelation);
                     repository.save(user);
                     HttpHeaders headers = new HttpHeaders();
                     headers.setLocation(linkTo(UsersController.class).slash(user.getId()).toUri());
