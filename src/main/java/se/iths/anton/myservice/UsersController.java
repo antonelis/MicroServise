@@ -54,10 +54,13 @@ public class UsersController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     @PutMapping("/{id}")
-    ResponseEntity<User> replacePerson(@RequestBody User newPerson, @PathVariable Integer id) {
+    ResponseEntity<User> replacePerson(@RequestBody User newUser, @PathVariable Integer id) {
         return repository.findById(id)
                 .map(user -> {
-                    user.setUserName(newPerson.getUserName());
+                    user.setUserName(newUser.getUserName());
+                    user.setRealName(newUser.getRealName());
+                    user.setCity(newUser.getCity());
+                    user.setIncome(newUser.getIncome());
                     repository.save(user);
                     HttpHeaders headers = new HttpHeaders();
                     headers.setLocation(linkTo(UsersController.class).slash(user.getId()).toUri());
