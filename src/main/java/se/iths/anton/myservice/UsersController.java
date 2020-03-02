@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/users")
@@ -21,6 +22,7 @@ public class UsersController {
         this.repository = usersRepository;
         this.assembler = usersModelAssembler;
     }
+
     @GetMapping
     public CollectionModel<EntityModel<User>> all() {
         log.info("All persons called");
@@ -34,6 +36,7 @@ public class UsersController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
     @PostMapping
     public ResponseEntity<User> createPerson(@RequestBody User user) {
         log.info("POST create Person " + user);
@@ -44,6 +47,7 @@ public class UsersController {
         //headers.add("Location", "/api/persons/" + p.getId());
         return new ResponseEntity<>(u, headers, HttpStatus.CREATED);
     }
+
     @DeleteMapping("/{id}")
     ResponseEntity<?> deletePerson(@PathVariable Integer id) {
         if (repository.existsById(id)) {
@@ -53,6 +57,7 @@ public class UsersController {
         } else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
     @PutMapping("/{id}")
     ResponseEntity<User> replacePerson(@RequestBody User newUser, @PathVariable Integer id) {
         return repository.findById(id)
@@ -70,15 +75,19 @@ public class UsersController {
                 .orElseGet(() ->
                         new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
     @PatchMapping("/{id}")
     ResponseEntity<User> modifyPerson(@RequestBody User newUser, @PathVariable Integer id) {
         return repository.findById(id)
                 .map(user -> {
                     if (newUser.getUserName() != null)
                         user.setUserName(newUser.getUserName());
-                    user.setRealName(newUser.getRealName());
-                    user.setCity(newUser.getCity());
-                    user.setIncome(newUser.getIncome());
+                    if (newUser.getRealName() != null)
+                        user.setRealName(newUser.getRealName());
+                    if (newUser.getCity() != null)
+                        user.setCity(newUser.getCity());
+                    if (newUser.getIncome() != null)
+                        user.setIncome(newUser.getIncome());
                     user.setInRelation(newUser.inRelation);
                     repository.save(user);
                     HttpHeaders headers = new HttpHeaders();

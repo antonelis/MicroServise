@@ -16,10 +16,10 @@ public class User {
     String userName;
     String realName;
     String city;
-    int income;
+    Integer income;
     boolean inRelation;
 
-    public User(Integer id, String userName,String realName, String city, int income, boolean inRelation) {
+    public User(Integer id, String userName,String realName, String city, Integer income, boolean inRelation) {
         this.id=id;
         this.userName=userName;
         this.realName=realName;
