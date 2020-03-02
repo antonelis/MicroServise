@@ -71,16 +71,19 @@ public class UsersController {
                         new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     @PatchMapping("/{id}")
-    ResponseEntity<User> modifyPerson(@RequestBody User newPerson, @PathVariable Integer id) {
+    ResponseEntity<User> modifyPerson(@RequestBody User newUser, @PathVariable Integer id) {
         return repository.findById(id)
-                .map(person -> {
-                    if (newPerson.getUserName() != null)
-                        person.setUserName(newPerson.getUserName());
-
-                    repository.save(person);
+                .map(user -> {
+                    if (newUser.getUserName() != null)
+                        user.setUserName(newUser.getUserName());
+                    user.setRealName(newUser.getRealName());
+                    user.setCity(newUser.getCity());
+                    user.setIncome(newUser.getIncome());
+                    user.setInRelation(newUser.inRelation);
+                    repository.save(user);
                     HttpHeaders headers = new HttpHeaders();
-                    headers.setLocation(linkTo(UsersController.class).slash(person.getId()).toUri());
-                    return new ResponseEntity<>(person, headers, HttpStatus.OK);
+                    headers.setLocation(linkTo(UsersController.class).slash(user.getId()).toUri());
+                    return new ResponseEntity<>(user, headers, HttpStatus.OK);
                 })
                 .orElseGet(() ->
                         new ResponseEntity<>(HttpStatus.NOT_FOUND));
