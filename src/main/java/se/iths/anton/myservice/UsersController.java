@@ -38,14 +38,14 @@ public class UsersController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createPerson(@RequestBody User user) {
+    public ResponseEntity<?> createPerson(@RequestBody User user) {
         log.info("POST create Person " + user);
         var u = repository.save(user);
         log.info("Saved to repository " + u);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(linkTo(UsersController.class).slash(u.getId()).toUri());
         //headers.add("Location", "/api/persons/" + p.getId());
-        return new ResponseEntity<>(u, headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(assembler.toModel(u), headers, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
