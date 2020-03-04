@@ -13,7 +13,7 @@ public class SetupDatabase {
     CommandLineRunner initDatabase(UsersRepository repository) {
         return args -> {
             if( repository.count() == 0) {
-                //New empty database, add some persons
+                //New empty database, add some users
                 repository.save(new User(0,"Anton", "Anton Johansson", "Mölndal", 10000, true));
                 repository.save(new User(0,"Sebbe", "Sebastian Waltilla", "Fjärås", 60000, true));
                 repository.save(new User(0,"Jonte", "Jonathan Holm", "Umeå", 40000, false));
