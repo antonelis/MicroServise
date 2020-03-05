@@ -58,22 +58,28 @@ public class UsersController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/{id}")
-    ResponseEntity<User> replacePerson(@RequestBody User newUser, @PathVariable Integer id) {
-        return repository.findById(id)
-                .map(user -> {
-                    user.setUserName(newUser.getUserName());
-                    user.setRealName(newUser.getRealName());
-                    user.setCity(newUser.getCity());
-                    user.setIncome(newUser.getIncome());
-                    user.setInRelation(newUser.inRelation);
-                    repository.save(user);
-                    HttpHeaders headers = new HttpHeaders();
-                    headers.setLocation(linkTo(UsersController.class).slash(user.getId()).toUri());
-                    return new ResponseEntity<>(user, headers, HttpStatus.OK);
-                })
-                .orElseGet(() ->
-                        new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @PutMapping("/{id}") // uppdate  if pressent
+    ResponseEntity<EntityModel<User>> replacePerson(@RequestBody User user, @PathVariable Integer id) {
+
+        if(repository.findById(id).isPresent()){
+            log.info("IF");
+            var p = repository.findById(id)
+                    .map(existingUser -> {
+                        existingUser.setUserName(user.getUserName());
+                        existingUser.setRealName(user.getRealName());
+                        existingUser.setCity((user.getCity()));
+                        existingUser.setIncome(user.getIncome());
+                        existingUser.setInRelation(user.isInRelation());
+                        repository.save(existingUser);
+                        return existingUser;})
+                    .get();
+            var entityModel = assembler.toModel(p);
+            return new ResponseEntity<>(entityModel, HttpStatus.OK);
+        }
+        else{
+            log.info("ELSE!");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PatchMapping("/{id}")

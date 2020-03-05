@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
+import org.springframework.http.MediaType;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,19 +71,29 @@ class UsersControllerTest {
 
     @Test
     @DisplayName("Calls POST method with url /api/v1/users/")
-    void postOnePersonWithNewId() throws Exception {
+    void postOneUserWithNewId() throws Exception {
         mockMvc.perform(
-                post("/api/v1/users/").contentType("application/json").content("{\"id\":0,\"userName\":\"Innan JONANNA\",\"realName\":\"Johanna Svallingson\",\"city\":\"goteborg\",\"income\":10000,\"inRelationship\":true}").accept("application/json"))
-
+                post("/api/v1/users/").contentType("application/json").content("{\"id\":0,\"userName\":\"Johanna\",\"realName\":\"Johanna Svallingson\",\"city\":\"Göteborg\",\"income\":10000,\"inRelationship\":true}").accept("application/json"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("_links.self.href", is("http://localhost/api/v1/users/1")));
     }
 
     @Test
     @DisplayName("Calls DELETE method with url /api/v1/users/1")
-    void deleteOneUserWithFirstID() throws Exception {
+    void deleteOneUserWithFirstId() throws Exception {
         mockMvc.perform(
                 delete("/api/v1/users/1").accept("application/json"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @DisplayName("Calls PUT method with url /api/v1/users/1")
+    void putOneUserWithFirstId() throws Exception {
+        mockMvc.perform(
+                put("/api/v1/users/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\":0,\"userName\":\"Efter put\",\"realName\":\"Anton Johansson Plopp\",\"city\":\"goteborg\",\"income\":10000,\"inRelationship\":true}"))
+                .andExpect(status().isOk());
+    }
 }
+
