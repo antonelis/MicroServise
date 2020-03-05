@@ -83,7 +83,7 @@ public class UsersController {
     }
 
     @PatchMapping("/{id}")
-    ResponseEntity<User> modifyPerson(@RequestBody User newUser, @PathVariable Integer id) {
+    ResponseEntity<User> modifyUser(@RequestBody User newUser, @PathVariable Integer id) {
         return repository.findById(id)
                 .map(user -> {
                     if (newUser.getUserName() != null)
@@ -94,7 +94,7 @@ public class UsersController {
                         user.setCity(newUser.getCity());
                     if (newUser.getIncome() != null)
                         user.setIncome(newUser.getIncome());
-                    user.setInRelation(newUser.inRelation);
+                    user.setInRelation(newUser.isInRelation());
                     repository.save(user);
                     HttpHeaders headers = new HttpHeaders();
                     headers.setLocation(linkTo(UsersController.class).slash(user.getId()).toUri());
