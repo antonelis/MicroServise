@@ -92,7 +92,17 @@ class UsersControllerTest {
         mockMvc.perform(
                 put("/api/v1/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":0,\"userName\":\"Efter put\",\"realName\":\"Anton Johansson Plopp\",\"city\":\"goteborg\",\"income\":10000,\"inRelationship\":true}"))
+                        .content("{\"id\":0,\"userName\":\"Put\",\"realName\":\"Anton Johansson\",\"city\":\"goteborg\",\"income\":10000,\"inRelationship\":true}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Calls PATCH method with url /api/v1/users/1")
+    void patchOneUserWithFirstId() throws Exception {
+        mockMvc.perform(
+                patch("/api/v1/users/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\":0,\"userName\":\"Patch\",\"realName\":\"Anton Patch\",\"city\":\"goteborg\",\"income\":10000,\"inRelationship\":true}"))
                 .andExpect(status().isOk());
     }
 }
